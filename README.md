@@ -134,11 +134,16 @@ Pro bat Débutant 13-3, Champion bat Débutant 13-3.
 
 ## Limites connues (honnêtes)
 
-- **Pas de build Android natif (APK/AAB)** : l'environnement de développement ne dispose ni du SDK Android
-  ni d'un appareil. Le jeu est une PWA installable. Pour un APK : envelopper le dossier avec
-  [Capacitor](https://capacitorjs.com/) (`npm i @capacitor/core @capacitor/cli @capacitor/android`,
-  `npx cap init`, `webDir` = dossier contenant `index.html`, `npx cap add android`, `npx cap open android`) ou
-  une Trusted Web Activity, puis tester sur appareils réels.
+- **APK Android** : `bash scripts/build-apk.sh` produit `dist/bolidball.apk` (≈ 150 Ko, Android 7.0+,
+  paysage plein écran). Le SDK Android n'étant pas téléchargeable dans l'environnement de construction,
+  la chaîne est minimale : `javac` + `android.jar` (API 34) → `dx` (AOSP) → manifeste binaire et
+  `resources.arsc` encodés par `android/tools/binres.py` → zip aligné → signature v2 (apksig).
+  Le jeu tourne dans une WebView ; ses fichiers sont servis depuis les assets de l'APK sous une origine https
+  locale, sans aucune permission ni accès réseau. **Signé avec une clé de débogage** (installation directe,
+  « sources inconnues ») : pour le Play Store il faudra une clé de publication
+  (`ANDROID_KEYSTORE`, `ANDROID_KEYSTORE_PASS`, `ANDROID_KEY_ALIAS`) et un AAB (Gradle/Android Studio).
+  Vérifié : signature (apksig) et structure (androguard : manifeste, icône, classes DEX, alignement) ;
+  **non lancé sur un appareil ou un émulateur** (aucun disponible ici).
 - **Non testé sur téléphone physique** : les tests tactiles utilisent l'émulation multitouch de Chromium ; les
   performances mesurées l'ont été sur un processeur de bureau. Un réglage de qualité automatique passe en
   « basse » (densité de pixels 1, moins de particules) si la moyenne descend sous 40 images/s.
