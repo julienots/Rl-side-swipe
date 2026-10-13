@@ -1,0 +1,13 @@
+{
+  "name": "bolidball",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Bolid'Ball — football automobile en arène 2D pour mobile (HTML5 Canvas, hors ligne)",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.js",
+    "test:e2e": "node tests/e2e/smoke.mjs",
+    "lint": "eslint src tests scripts"
+  }
+}

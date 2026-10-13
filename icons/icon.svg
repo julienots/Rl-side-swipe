@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141c46"/><stop offset="1" stop-color="#e0705a"/></linearGradient>
+    <radialGradient id="ball" cx="0.38" cy="0.35" r="0.7"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#b9c6d8"/></radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <rect x="0" y="396" width="512" height="116" fill="#1b2038"/>
+  <rect x="0" y="392" width="256" height="10" fill="#2bb5ff"/>
+  <rect x="256" y="392" width="256" height="10" fill="#ff7a1a"/>
+  <circle cx="330" cy="200" r="92" fill="url(#ball)" stroke="#3c4d6b" stroke-width="6"/>
+  <path d="M290 140 a80 80 0 0 1 90 40 M300 270 a80 80 0 0 1 -50 -70 M395 245 a80 80 0 0 1 -60 45" fill="none" stroke="#3c4d6b" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="330" cy="200" r="18" fill="#ff5a7a"/>
+  <g transform="translate(150 350)">
+    <path d="M-110 20 L120 20 L118 0 L45 -18 L-10 -48 L-90 -44 L-112 -22 Z" fill="#e9eef5" stroke="#2bb5ff" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M30 -16 L-8 -40 L-58 -38 L-50 -16 Z" fill="#192337"/>
+    <rect x="-112" y="2" width="230" height="10" fill="#2bb5ff"/>
+    <circle cx="-68" cy="28" r="26" fill="#15171c"/><circle cx="-68" cy="28" r="14" fill="#aab3c2"/>
+    <circle cx="72" cy="28" r="26" fill="#15171c"/><circle cx="72" cy="28" r="14" fill="#aab3c2"/>
+    <path d="M-115 -10 L-190 -20 L-115 -30 Z" fill="#ffb03a"/>
+  </g>
+</svg>

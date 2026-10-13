@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#0d1230">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Bolid'Ball : football automobile en arène 2D, matchs rapides contre l'IA, entraînement, défis et parcours.">
+  <title>Bolid'Ball</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="src/ui/style.css">
+</head>
+<body>
+  <div id="app">
+    <canvas id="game" aria-label="Terrain de jeu"></canvas>
+
+    <!-- HUD de match -->
+    <div id="hud" class="hidden">
+      <button id="btn-pause" class="hud-btn" aria-label="Pause">❚❚</button>
+      <div id="scoreboard">
+        <div class="score team0"><span id="score0">0</span></div>
+        <div id="clock">3:00</div>
+        <div class="score team1"><span id="score1">0</span></div>
+      </div>
+      <div id="mode-info"></div>
+      <div id="training-bar" class="hidden">
+        <button data-act="resetBall" class="chip">⟲ Balle</button>
+        <button data-act="launch" class="chip">⤴ Lancer</button>
+        <button data-act="resetCar" class="chip">↺ Voiture</button>
+      </div>
+      <div id="course-bar" class="hidden">
+        <button data-act="respawn" class="chip">↺ Dernier point</button>
+        <button data-act="restartCourse" class="chip">⟲ Recommencer</button>
+      </div>
+      <div id="precision-bar" class="hidden">
+        <button data-act="retry" class="chip">⟲ Réessayer</button>
+      </div>
+      <div id="banner" class="hidden"><div id="banner-main"></div><div id="banner-sub"></div></div>
+      <div id="feed"></div>
+      <div id="fps" class="hidden"></div>
+    </div>
+
+    <!-- Commandes tactiles -->
+    <div id="controls" class="hidden">
+      <div id="stick-zone"><div id="stick-base"><div id="stick-knob"></div></div></div>
+      <div id="action-zone">
+        <button id="btn-boost" class="action" aria-label="Boost">
+          <svg viewBox="0 0 100 100" class="ring"><circle cx="50" cy="50" r="44" class="ring-bg"/><circle cx="50" cy="50" r="44" class="ring-fg" id="boost-ring"/></svg>
+          <span class="label">BOOST</span><span class="value" id="boost-value">34</span>
+        </button>
+        <button id="btn-jump" class="action" aria-label="Saut"><span class="label">SAUT</span></button>
+      </div>
+    </div>
+
+    <!-- Écrans de menu -->
+    <div id="screens">
+      <section id="screen-menu" class="screen">
+        <header class="topbar">
+          <div class="profile-chip"><span class="lvl" id="menu-level">1</span><div class="xpbar"><div id="menu-xp"></div></div><span id="menu-name">Pilote</span></div>
+          <div class="credits-chip">⬢ <span id="menu-credits">0</span></div>
+        </header>
+        <div class="title-block">
+          <h1 class="logo">BOLID<span>'</span>BALL</h1>
+          <p class="tagline">Football automobile en arène</p>
+        </div>
+        <nav class="menu-main">
+          <button class="big primary" data-nav="play">JOUER</button>
+          <div class="menu-row">
+            <button class="mid" data-nav="garage">Garage</button>
+            <button class="mid" data-nav="shop">Boutique</button>
+            <button class="mid" data-nav="progress">Progression</button>
+            <button class="mid" data-nav="settings">Paramètres</button>
+          </div>
+        </nav>
+      </section>
+
+      <section id="screen-play" class="screen">
+        <header class="topbar"><button class="back" data-back>‹ Retour</button><h2>Choisir un mode</h2><span></span></header>
+        <div class="mode-grid">
+          <button class="mode-card" data-mode="quick"><b>Partie rapide</b><small>2c2 contre l'IA, arène au hasard</small></button>
+          <button class="mode-card" data-mode="match"><b>Match contre l'IA</b><small>Format, difficulté, arène et durée au choix</small></button>
+          <button class="mode-card" data-mode="training"><b>Entraînement libre</b><small>Sans chrono, boost illimité, objectifs</small></button>
+          <button class="mode-card" data-mode="precision"><b>Défis de précision</b><small>Séries de tirs notées en étoiles</small></button>
+          <button class="mode-card" data-mode="course"><b>Parcours d'obstacles</b><small>Contre la montre, médailles</small></button>
+        </div>
+        <p class="note">Le jeu en ligne n'est pas disponible dans cette version (aucun serveur configuré).</p>
+      </section>
+
+      <section id="screen-setup" class="screen">
+        <header class="topbar"><button class="back" data-back>‹ Retour</button><h2>Match contre l'IA</h2><button class="mid primary" id="btn-start-match">LANCER ▸</button></header>
+        <div class="setup">
+          <div class="field"><label>Format</label><div class="seg" id="opt-size"><button data-v="1">1c1</button><button data-v="2">2c2</button><button data-v="3">3c3</button></div></div>
+          <div class="field"><label>Difficulté</label><div class="seg" id="opt-diff"><button data-v="easy">Débutant</button><button data-v="normal">Pro</button><button data-v="hard">Champion</button></div></div>
+          <div class="field"><label>Durée</label><div class="seg" id="opt-dur"><button data-v="120">2 min</button><button data-v="180">3 min</button><button data-v="300">5 min</button></div></div>
+          <div class="field"><label>Arène</label><div class="arena-list" id="opt-arena"></div></div>
+        </div>
+      </section>
+
+      <section id="screen-precision" class="screen">
+        <header class="topbar"><button class="back" data-back>‹ Retour</button><h2>Défis de précision</h2><span></span></header>
+        <div class="card-list" id="precision-list"></div>
+      </section>
+
+      <section id="screen-course" class="screen">
+        <header class="topbar"><button class="back" data-back>‹ Retour</button><h2>Parcours d'obstacles</h2><span></span></header>
+        <div class="card-list" id="course-list"></div>
+      </section>
+
+      <section id="screen-garage" class="screen">
+        <header class="topbar"><button class="back" data-back>‹ Retour</button><h2>Garage</h2><div class="credits-chip">⬢ <span class="credits-val">0</span></div></header>
+        <div class="garage">
+          <div class="garage-preview">
+            <canvas id="garage-canvas" width="520" height="300"></canvas>
+            <div class="seg small" id="garage-team"><button data-v="0">Équipe Azur</button><button data-v="1">Équipe Braise</button></div>
+            <p class="note">Toutes les carrosseries ont la même hitbox et les mêmes performances : les cosmétiques sont purement visuels.</p>
+          </div>
+          <div class="garage-side">
+            <div class="tabs" id="garage-tabs"></div>
+            <div class="item-grid" id="garage-items"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-shop" class="screen">
+        <header class="topbar"><button class="back" data-back>‹ Retour</button><h2>Boutique du jour</h2><div class="credits-chip">⬢ <span class="credits-val">0</span></div></header>
+        <p class="note warn">Démo : les crédits ⬢ sont une monnaie fictive gagnée en jouant. Aucun achat réel n'est possible.</p>
+        <div class="shop-grid" id="shop-items"></div>
+        <p class="note" id="shop-reset"></p>
+      </section>
+
+      <section id="screen-progress" class="screen">
+        <header class="topbar"><button class="back" data-back>‹ Retour</button><h2>Progression</h2><span></span></header>
+        <div class="tabs" id="progress-tabs">
+          <button data-tab="stats" class="active">Statistiques</button>
+          <button data-tab="challenges">Défis</button>
+          <button data-tab="achievements">Succès</button>
+          <button data-tab="training">Objectifs d'entraînement</button>
+        </div>
+        <div id="progress-body" class="progress-body"></div>
+      </section>
+
+      <section id="screen-settings" class="screen">
+        <header class="topbar"><button class="back" data-back>‹ Retour</button><h2>Paramètres</h2><span></span></header>
+        <div class="settings" id="settings-body"></div>
+      </section>
+    </div>
+
+    <!-- Pause -->
+    <div id="pause" class="overlay hidden">
+      <div class="panel">
+        <h2>Pause</h2>
+        <button class="big primary" data-pause="resume">Reprendre</button>
+        <button class="mid" data-pause="restart">Recommencer</button>
+        <button class="mid" data-pause="controls">Commandes</button>
+        <button class="mid danger" data-pause="quit">Quitter</button>
+        <div id="pause-controls" class="settings hidden"></div>
+        <div class="keys-help">Clavier : ← → ↑ ↓ déplacer · Espace sauter · Maj boost · Échap pause<br>Manette : stick gauche · A saut · B/RT boost · Start pause</div>
+      </div>
+    </div>
+
+    <!-- Résultats -->
+    <div id="results" class="overlay hidden">
+      <div class="panel wide">
+        <h2 id="res-title">Victoire !</h2>
+        <div id="res-score" class="res-score"></div>
+        <div id="res-table"></div>
+        <div id="res-rewards" class="rewards"></div>
+        <div class="row">
+          <button class="big primary" id="btn-rematch">Revanche</button>
+          <button class="big" id="btn-menu">Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="confirm" class="overlay hidden">
+      <div class="panel"><p id="confirm-text"></p><div class="row"><button class="mid danger" id="confirm-yes">Confirmer</button><button class="mid" id="confirm-no">Annuler</button></div></div>
+    </div>
+
+    <div id="toast"></div>
+    <div id="rotate-hint" class="hidden">Tournez l'appareil en mode paysage pour un meilleur confort ⟳</div>
+  </div>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

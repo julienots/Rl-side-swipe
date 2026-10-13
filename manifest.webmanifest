@@ -1,0 +1,18 @@
+{
+  "name": "Bolid'Ball",
+  "short_name": "Bolid'Ball",
+  "description": "Football automobile en arène 2D — matchs rapides contre l'IA, entraînement, défis et parcours.",
+  "lang": "fr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#0d1230",
+  "theme_color": "#0d1230",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
