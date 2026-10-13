@@ -383,7 +383,6 @@ export class UI {
     $('#hud').classList.remove('hidden');
     $('#training-bar').classList.toggle('hidden', mode !== 'training');
     $('#course-bar').classList.toggle('hidden', mode !== 'course');
-    $('#precision-bar').classList.toggle('hidden', mode !== 'precision');
     $('#scoreboard').classList.toggle('solo', mode !== 'match');
     $('#feed').innerHTML = '';
     this.hideBanner();

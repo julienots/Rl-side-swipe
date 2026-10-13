@@ -27,8 +27,6 @@ export function clampBallSpeed(ball) {
   if (sp > BP.maxSpeed) { const k = BP.maxSpeed / sp; ball.vx *= k; ball.vy *= k; }
 }
 
-const tmpContact = { nx: 0, ny: 0, pen: 0 };
-
 /**
  * Collision cercle/segments, résolue par impulsions avec frottement et effet (spin).
  * Retourne la plus grande vitesse d'impact normale (pour sons/effets).
@@ -45,7 +43,7 @@ export function collideBallStatic(ball, segments) {
           ball.y + r < Math.min(s.ay, s.by) || ball.y - r > Math.max(s.ay, s.by)) continue;
       const t = closestT(ball.x, ball.y, s.ax, s.ay, s.bx, s.by);
       const cx = s.ax + (s.bx - s.ax) * t, cy = s.ay + (s.by - s.ay) * t;
-      let dx = ball.x - cx, dy = ball.y - cy;
+      const dx = ball.x - cx, dy = ball.y - cy;
       const d2 = dx * dx + dy * dy;
       if (d2 >= r * r) continue;
       const d = Math.sqrt(d2);

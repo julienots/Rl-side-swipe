@@ -14,7 +14,7 @@ test('défi de précision : réussite sur but, échec sur temps écoulé, résul
   stepFor(s, 1.25);
   assert.equal(s.state, 'playing');
   resetBall(s.ball, s.arena.W - 3, 2, 30, 0);
-  let ev = stepFor(s, 0.4);
+  const ev = stepFor(s, 0.4);
   assert.ok(ev.some((e) => e.type === 'challengeSuccess'));
   assert.equal(s.results[0], true);
   stepFor(s, 1.7);

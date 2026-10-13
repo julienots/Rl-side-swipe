@@ -20,7 +20,8 @@ function insideArena(arena, b, tol = 0.05) {
 test('la balle rebondit avec des hauteurs décroissantes puis se pose au sol', () => {
   const w = new World(buildArena(getArenaDef('horizon')));
   resetBall(w.ball, 0, 10);
-  let peaks = [], prevVy = 0;
+  const peaks = [];
+  let prevVy = 0;
   for (let i = 0; i < 120 * 12; i++) {
     w.step(DT);
     if (prevVy > 0 && w.ball.vy <= 0) peaks.push(w.ball.y);

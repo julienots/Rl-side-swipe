@@ -56,7 +56,12 @@ class App {
   get save() { return this.store.data; }
 
   bindGlobal() {
-    const unlock = () => { this.audio.unlock(); this.applySettings(); };
+    const unlock = () => {
+      const first = !this.audio.ctx;
+      this.audio.unlock();
+      this.applySettings();
+      if (first && this.demo) this.audio.startMusic(); // la musique du menu démarre au premier geste
+    };
     window.addEventListener('pointerdown', unlock, { once: false, passive: true });
     window.addEventListener('keydown', unlock, { passive: true });
     window.addEventListener('resize', () => this.onResize());
@@ -75,7 +80,10 @@ class App {
   onResize() {
     this.renderer.resize();
     const portrait = window.innerHeight > window.innerWidth;
-    $('#rotate-hint').classList.toggle('hidden', !(portrait && this.session && !this.demo));
+    const hint = $('#rotate-hint');
+    hint.classList.toggle('hidden', !(portrait && this.session && !this.demo));
+    clearTimeout(this._hintTimer);
+    this._hintTimer = setTimeout(() => hint.classList.add('hidden'), 4000);
   }
 
   applySettings() {
@@ -231,7 +239,7 @@ class App {
       else if (this.session && !this.demo && !this.resultShown) this.pause();
       else if (!this.session || this.demo) { if (this.ui.current && this.ui.current !== 'menu') this.ui.back(); }
     } else if (!this.paused && !this.demo && this.session) {
-      if (a === 'reset') this.hudAction(this.session.mode === 'course' ? 'respawn' : this.session.mode === 'precision' ? 'retry' : 'resetBall');
+      if (a === 'reset') this.hudAction(this.session.mode === 'course' ? 'respawn' : 'resetBall');
       if (a === 'launch') this.hudAction('launch');
     }
   }
@@ -245,7 +253,6 @@ class App {
     else if (a === 'resetCar') s.trainingResetCar?.();
     else if (a === 'respawn') s.respawn?.();
     else if (a === 'restartCourse') { s.restart?.(); this.resultShown = false; }
-    else if (a === 'retry') s.retry?.();
   }
 
   // ------------------------------------------------------------------ boucle

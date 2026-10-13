@@ -85,12 +85,6 @@ export class PrecisionSession {
     this.emit('scenario', { index: this.index, name: sc.name });
   }
 
-  /** Recommence l'essai en cours (compte comme un nouvel essai, sans pénalité). */
-  retry() {
-    if (this.state === 'ended') return;
-    this.setupScenario();
-  }
-
   step(dt, humanInputs = {}) {
     if (this.state === 'ended') return;
     this.stateTime += dt;

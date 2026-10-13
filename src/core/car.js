@@ -102,7 +102,7 @@ export function stepCarControl(car, input, world, dt) {
   car.wasGrounded = car.grounded;
   probeGround(car, segments);
 
-  let mx = clamp(input.mx || 0, -1, 1), my = clamp(input.my || 0, -1, 1);
+  const mx = clamp(input.mx || 0, -1, 1), my = clamp(input.my || 0, -1, 1);
   const jumpPressed = !!input.jump && !car.prevJump;
   car.prevJump = !!input.jump;
   let { fx, fy, ux, uy } = carAxes(car);

@@ -12,7 +12,7 @@ export const CATEGORIES = [
   { id: 'paint', name: 'Peinture' },
   { id: 'wheels', name: 'Roues' },
   { id: 'decal', name: 'Autocollant' },
-  { id: 'trail', name: 'Traînée de boost' },
+  { id: 'trail', name: 'Traînée' },
   { id: 'explosion', name: 'Effet de but' },
 ];
 

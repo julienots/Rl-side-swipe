@@ -90,7 +90,7 @@ export class World {
     const bx = car.x - fx * CP.halfLen, by = car.y - fy * CP.halfLen;
     const t = closestT(ball.x, ball.y, ax, ay, bx, by);
     const cx = ax + (bx - ax) * t, cy = ay + (by - ay) * t;
-    let dx = ball.x - cx, dy = ball.y - cy;
+    const dx = ball.x - cx, dy = ball.y - cy;
     const minD = CP.radius + ball.r;
     const d2 = dx * dx + dy * dy;
     if (d2 >= minD * minD) return;

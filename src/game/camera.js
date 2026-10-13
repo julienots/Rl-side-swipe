@@ -22,7 +22,7 @@ export class Camera {
       const look = clamp(player.vx * 0.3, -6, 6);
       let x = px + look;
       x = clamp(x, viewW / 2 - 1, Math.max(viewW / 2 - 1, arena.def.L - viewW / 2 + 1));
-      let y = clamp(py + 2, viewH / 2 - 1.5, Math.max(viewH / 2 - 1.5, arena.H - viewH / 2 + 1));
+      const y = clamp(py + 2, viewH / 2 - 1.5, Math.max(viewH / 2 - 1.5, arena.H - viewH / 2 + 1));
       return { x, y, viewH, look };
     }
     const H = arena.H;
@@ -45,9 +45,10 @@ export class Camera {
     viewH = Math.min(viewH, Math.max(baseH, totalW / aspect, 24 / Math.max(aspect, 0.3)));
     const viewW = viewH * aspect;
     const halfSpan = totalW / 2;
-    let x = viewW >= totalW ? 0 : clamp(fx, -halfSpan + viewW / 2, halfSpan - viewW / 2);
+    const x = viewW >= totalW ? 0 : clamp(fx, -halfSpan + viewW / 2, halfSpan - viewW / 2);
     let y;
-    if (viewH >= baseH - 0.01) y = top - viewH / 2;
+    // paysage : sol à ~16 % du bas ; portrait (vue très haute) : arène centrée dans la moitié haute
+    if (viewH >= baseH - 0.01) y = Math.max(top - viewH / 2, top / 2 - 0.17 * viewH);
     else y = clamp((ballVisible ? ball.y : py) * 0.7 + py * 0.3, viewH / 2 - 3, top - viewH / 2);
     return { x, y, viewH, look };
   }

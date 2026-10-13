@@ -381,10 +381,14 @@ export class Renderer {
       sx = -Math.cos(p * Math.PI);
       if (Math.abs(sx) < 0.15) sx = 0.15 * Math.sign(sx || 1);
     }
+    // inclinaison visuelle (cabrage à l'accélération, plongée au freinage)
+    const tiltTarget = car.grounded ? Math.max(-0.07, Math.min(0.07, (car.throttle || 0) * 0.05 + (car.boosting ? 0.03 : 0))) : 0;
+    car.visTilt = (car.visTilt || 0) + (tiltTarget - (car.visTilt || 0)) * 0.15;
     ctx.save();
     ctx.translate(x, y);
     ctx.rotate(ang);
     ctx.scale(sx, car.facing);
+    ctx.rotate(car.visTilt);
     drawCarLocal(ctx, {
       cos: car.cosmetics || DEFAULT_COS, team: car.team, wheelSpin: car.wheelSpin,
       suspension: car.grounded ? car.suspension : PHYS.car.suspension * 0.8, quality: this.quality,
